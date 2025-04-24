@@ -65,7 +65,7 @@ El punto de sujeción del péndulo es fijo y está definido en:
 ```python
 anchor_x = 344
 anchor_y = 0
-
+```
 Esto se puede modificar si cambia la posición del péndulo en el video.
 
 ## 🖼️ Ejemplo de Visualización
@@ -93,11 +93,15 @@ El sistema muestra en pantalla en tiempo real:
 Este proyecto fue desarrollado como parte de un estudio sobre el movimiento armónico simple (MAS) aplicado a péndulos usando visión por computador.
 
 ## 🗃️ Estructura del Proyecto
-```
+
 📁 proyecto_pendulo/
+
 ├── long.mp4
+
 ├── pendulo_tracking.py
+
 └── README.md
+
 ```
 
 ## ▶️ Requisitos para Ejecutar
@@ -108,7 +112,7 @@ pip install opencv-python numpy matplotlib scipy
 
 Luego ejecuta el script:
 ```bash
-python pendulo_tracking.py
+python main.py
 ```
 
 ## 🧠 Conceptos Científicos Aplicados

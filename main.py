@@ -1,3 +1,4 @@
+#Importar librerias
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,6 +8,7 @@ import math
 
 # Cargar el video
 video_path = 'short.mp4'
+#video_path = 'long.mp4'
 cap = cv2.VideoCapture(video_path)
 
 # Obtener propiedades del video
@@ -27,7 +29,7 @@ else:
 new_height = 480
 new_width = 680
 
-# MODIFICACIÓN: Establecer punto de sujeción fijo en (344, 0)
+# Establecer punto de sujeción fijo en (344, 0)
 anchor_x = 344
 anchor_y = 0
 print(f"Punto de sujeción fijo: ({anchor_x}, {anchor_y})")
@@ -80,9 +82,9 @@ while True:
     # Convertir a HSV para mejor segmentación por color
     hsv = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2HSV)
 
-    # Definir los límites para la segmentación (ajustar según el color del péndulo)
-    lower_limit = np.array([0, 0, 0])  # Ajustar según el color del objeto
-    upper_limit = np.array([35, 255, 255])  # Ajustar según el color del objeto
+    # Definir los límites para la segmentación
+    lower_limit = np.array([0, 0, 0])
+    upper_limit = np.array([35, 255, 255])
 
     # Crear la máscara binaria
     mask = cv2.inRange(hsv, lower_limit, upper_limit)
@@ -100,9 +102,8 @@ while True:
 
     # Dibujar el centroide si se encuentra un contorno
     if contours:
-        # Encontrar el contorno más grande (probablemente el péndulo)
+        # Encontrar el contorno más grande
         largest_contour = max(contours, key=cv2.contourArea)
-
         # Calcular diámetro aproximado para calibración
         (x, y), radius = cv2.minEnclosingCircle(largest_contour)
         current_diameter = 2 * radius
@@ -112,9 +113,6 @@ while True:
             pixel_diameter = current_diameter
             pixels_per_cm = pixel_diameter / real_diameter_cm
             print(f"Calibración: {pixels_per_cm:.2f} píxeles por cm")
-
-            # ELIMINADO: Ya no calculamos el anchor_x y anchor_y aquí
-            # puesto que los definimos como fijos al inicio
 
         # Calcular los momentos del contorno
         M = cv2.moments(largest_contour)
@@ -127,7 +125,7 @@ while True:
             # El ángulo 0 corresponde a la posición vertical hacia abajo
             dx = cx - anchor_x
             dy = cy - anchor_y
-            angle_rad = math.atan2(dx, dy)  # Usamos atan2 para obtener el ángulo correcto en todos los cuadrantes
+            angle_rad = math.atan2(dx, dy)
             angle_deg = math.degrees(angle_rad)
 
             # Almacenar ángulo en el historial
@@ -135,6 +133,9 @@ while True:
 
             # Almacenar datos del centroide (tiempo, x, y)
             centroid_history.append((time_count, cx, cy, angle_deg))
+
+            # Dibujar el contorno del objeto
+            cv2.drawContours(display_frame, [largest_contour], -1, (255, 0, 0), 2)  # Contorno azul
 
             # Dibujar el centroide en el frame
             cv2.circle(display_frame, (cx, cy), radius=5, color=(0, 255, 0), thickness=-1)
